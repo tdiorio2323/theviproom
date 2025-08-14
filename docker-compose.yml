@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  viproom:
+    build: .
+    container_name: viproom
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    networks:
+      - vip-network
+    labels:
+      - "caddy=www.tdstudiosdigital.com"
+      - "caddy.reverse_proxy={{upstreams 8080}}"
+      - "caddy.basicauth=/vip/*"
+      - "caddy.basicauth.vip=JDJhJDE0JEVQWHJQOWJHRVhRaHNkQS5UemlrVi5DRE1wNVV3bEFVajdqRWZuUGt2blhkV3g3c3l6TmJx"
+    environment:
+      - NGINX_HOST=www.tdstudiosdigital.com
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  vip-network:
+    external: true
