@@ -1,24 +1,31 @@
-# The VIP Room - TD Studios
+## TD Studios VIP Room (Next.js + Builder.io)
 
-## Overview
-Private VIP room for exclusive TD Studios content and access.
+### 1) Configure
+```bash
+cp .env.example .env.local
+# edit values
+```
 
-**Domain:** www.tdstudiosdigital.com  
-**Server:** td-core-01 (167.99.127.220)  
-**Security:** Password protected access  
+- Get `BUILDER_PUBLIC_KEY` from Builder.io > Account > API Keys
+- Set `VIP_CODES` as a comma-separated list.
 
-## Features
-- Password-protected entry
-- Exclusive content showcase
-- Private client portal
-- Secure file access
-- Member-only resources
+### 2) Run
+```bash
+pnpm i # or npm i or yarn
+pnpm dev
+```
+Open http://localhost:3000/vip-access, enter a code, get redirected into `/vip`.
 
-## Tech Stack
-- Static HTML/CSS/JS
-- Caddy web server with basic auth
-- SSL/TLS encryption
-- Docker containerized deployment
+### 3) Protect more routes
+- All `/vip` and `/viproom` paths are gated by `middleware.ts`.
+- To gate additional paths, update `PROTECTED_PREFIXES` and `config.matcher`.
 
-## Deployment
-Deployed on td-core-01 DigitalOcean server using Docker and Caddy.
+### 4) Builder content
+- Create a Page in Builder with URL `/vip` and publish. It renders inside the card on `/vip`.
+
+### 5) Deploy
+- Set the same env vars in Vercel.
+- Ensure your domain uses HTTPS since the cookie is `secure: true`.
+
+### Notes
+- This is code-based access. For per-user auth, swap to Supabase/Clerk later. For now it's fast and works.
